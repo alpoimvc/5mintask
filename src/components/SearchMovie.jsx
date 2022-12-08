@@ -1,33 +1,43 @@
-import { useState, cloneElement } from 'react';
-import { Autocomplete, List, ListItem, ListItemIcon, ListItemText, TextField } from '@mui/material';
-import useSearchMovie from '../hooks/query/useSearchMovie';
+import { useState } from 'react';
+import { Autocomplete, TextField } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { searchMovie } from '../api/moviesApi';
+import { useContext } from 'react';
+import { AppContext } from '../App';
 
-export default function SearchMovie() {
-  const [search, setSearch] = useState('');
-  const { isLoading, error, data } = useSearchMovie(search);
+export default function SearchMovie({ movies }) {
+  const { search, setSearch } = useContext(AppContext);
 
-  console.log("search:", search, data);
+  console.log("SearchMovie context", search);
+  console.log("movies:", movies);
 
   return (
-    <div>
-      <Autocomplete
-        freeSolo
-        id="free-solo-2-demo"
-        disableClearable
-        options={data ? data.results.map((option) => option.title) : []}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Search input"
-            InputProps={{
-              ...params.InputProps,
-              type: 'search',
-            }}
-            onKeyUp={e => setSearch(e.target.value)}
-          />
-        )}
-      />
-    </div>
+    <Autocomplete
+      freeSolo
+      id="free-solo-2-demo"
+      disableClearable
+      options={movies ? movies.results.map((option) => option.title) : []}
+      sx={{ width: '50vw', margin: 'auto' }}
+      renderOption={(props, option) =>
+        <li {...props} key={props.id}>
+          {option}
+        </li>
+      }
+      onChange={(e, newValue) => {
+        setSearch(newValue);
+      }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Search input"
+          InputProps={{
+            ...params.InputProps,
+            type: 'search',
+          }}
+          onKeyUp={e => setSearch(e.target.value)}
+        />
+      )}
+    />
   )
 }
 

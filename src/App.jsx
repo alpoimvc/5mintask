@@ -1,41 +1,41 @@
-import { useState, cloneElement } from 'react'
+import { Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useState, cloneElement, createContext } from 'react'
+import { searchTitle } from './api/moviesApi';
 import './App.css'
-import { Autocomplete, List, ListItem, ListItemIcon, ListItemText, TextField } from '@mui/material';
-import FolderIcon from '@mui/icons-material/Folder';
-import {
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
-import useSearchMovie from './hooks/query/useSearchMovie';
+import MovieList from './components/MovieList';
 import SearchMovie from './components/SearchMovie';
 
-function App() {
+export const AppContext = createContext({
+  search: '',
+  selectedTitle: '',
+});
 
-  function generate(element) {
-    return [0, 1, 2].map((value) =>
-      cloneElement(element, {
-        key: value,
-      }),
-    );
-  }
+function App() {
+  const [search, setSearch] = useState('');
+  // const [selectedTitle, setSelectedTitle] = useState('');
+
+  // const { data: movies, error, isFetching } = useQuery({
+  //   queryKey: ['movies', selectedTitle],
+  //   queryFn: () => searchTitle(selectedTitle),
+  //   enabled: selectedTitle.length > 0,
+  // })
+
+  const { data: movies, error, isFetching } = useQuery({
+    queryKey: ['movies', search],
+    queryFn: () => searchTitle(search),
+    enabled: search.length > 1,
+  })
+
+  console.log("App ", search, movies);
 
   return (
-    <div className="App">
-      <SearchMovie />
-      <List dense={true}>
-        {generate(
-          <ListItem>
-            <ListItemIcon>
-              <FolderIcon />
-            </ListItemIcon>
-            <ListItemText
-              primary="Single-line item"
-              secondary={true ? 'Secondary text' : null}
-            />
-          </ListItem>,
-        )}
-      </List>
-    </div>
+    <AppContext.Provider value={{ search, setSearch }}>
+      <Box>
+        <SearchMovie movies={movies} />
+        <MovieList movies={movies} />
+      </Box>
+    </AppContext.Provider >
   )
 }
 
