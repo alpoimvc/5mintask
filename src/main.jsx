@@ -22,6 +22,10 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
+    path: "search/:title",
+    element: <App />,
+  },
+  {
     path: "movie/:movieId",
     element: <MovieDetails />,
   },
