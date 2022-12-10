@@ -1,11 +1,12 @@
 import { Box, CircularProgress } from '@mui/material';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { useState, cloneElement, createContext, useEffect } from 'react'
-import { getPopularMovies, searchTitle } from './api/moviesApi';
+import { getMovieGenres, getPopularMovies, searchTitle } from './api/moviesApi';
 import { useParams } from "react-router-dom";
 import './App.css'
 import MovieList from './components/MovieList';
 import SearchMovie from './components/SearchMovie';
+import { useGetMovies } from './hooks/useGetMovies';
 
 export const AppContext = createContext({
   search: '',
@@ -13,52 +14,58 @@ export const AppContext = createContext({
 });
 
 function App() {
-  const [search, setSearch] = useState('');
+  const [searchQuery, setSearchQuery] = useState();
   let { title } = useParams();
 
   useEffect(() => {
+    console.log("App, useffect title 1", title, searchQuery);
     if (title?.length > 0) {
-      setSearch(title);
+      setSearchQuery(title);
     }
-  }, [])
+    else {
+      console.log("App, useffect title 2", title, searchQuery);
+      setSearchQuery()
+    }
+  }, [title])
 
-  const results = useQueries({
-    queries: [
-      {
-        queryKey: ['movies', search],
-        queryFn: () => searchTitle(search),
-        enabled: search?.length > 0,
-      },
-      {
-        queryKey: ['popular'],
-        queryFn: () => getPopularMovies()
-      }
-    ]
-  })
+  const { data, isLoading, isFetching } = useGetMovies(searchQuery, title);
+  const { data: genres } = useQuery({
+    queryKey: ['genres', getMovieGenres],
+    queryFn: () => getMovieGenres()
+  });
 
-  // const { data: movies, isLoading, isFetching } = useQuery({
-  //   queryKey: ['movies', search],
-  //   queryFn: () => searchTitle(search),
-  //   enabled: search?.length > 0,
+
+  // const GENRES = {
+  //   Action: 1,
+  //   Adventure: 2,
+  // }
+
+  // const results = useQueries({
+  //   queries: [
+  //     {
+  //       queryKey: ['movies', searchQuery],
+  //       queryFn: () => searchTitle(searchQuery),
+  //       enabled: searchQuery?.length > 0,
+  //     },
+  //     {
+  //       queryKey: ['popular'],
+  //       queryFn: () => getPopularMovies(),
+  //       enabled: !searchQuery && !title,
+  //     }
+  //   ]
   // })
 
-  // const { data: popularMovies, isLoadingPopular, isFetchingPopular } = useQuery({
-  //   queryKey: ['popular'],
-  //   queryFn: () => getPopularMovies()
-  // })
-
-  // console.log("search, title, App: ", search, title);
-  console.log("movies: ", results);
-  // console.log("popular movies: ", popularMovies);
+  // console.log("render App: ", searchQuery, title, results[0].isFetching, results[1].isFetching);
+  console.log("App: ", data, isLoading, isFetching, genres);
 
   return (
-    <AppContext.Provider value={{ search, setSearch }}>
-      <Box sx={{ textAlign: 'center' }}>
-        <SearchMovie movies={results[0]} />
-        {/* {(isLoading && isFetching) || (isLoadingPopular && isFetchingPopular) ?
-          <CircularProgress />
-          : <MovieList movies={results[0].data || results[1].data} />
-        } */}
+    <AppContext.Provider value={{ searchQuery }}>
+      <Box sx={{ textAlign: 'center', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <SearchMovie movies={data} title={title} />
+        {isLoading || isFetching ?
+          <CircularProgress sx={{ margin: 'auto' }} />
+          : <MovieList movies={data} />
+        }
       </Box>
     </AppContext.Provider >
   )
