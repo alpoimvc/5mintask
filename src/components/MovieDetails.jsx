@@ -47,7 +47,7 @@ const MovieDetails = () => {
   //   enabled: movieId?.length > 0,
   // })
 
-  console.log("movie", movie);
+  console.log("render MovieDetails", movie);
   // console.log("movieVideos", movieVideos);
   // console.log("movieImages", movieImages);
 
@@ -55,15 +55,16 @@ const MovieDetails = () => {
     <Box sx={{ width: '70vw', height: '100vh', margin: 'auto', display: 'flex', backgroundColor: 'white' }}>
       {isLoading ?
         <CircularProgress sx={{ margin: 'auto' }} />
-        : <Box sx={{ border: '1px solid gray', width: '100%' }}>
+        : <Box sx={{ border: '1px solid gray', width: '100%', dispaly: 'flex' }}>
+          <img src={`https://image.tmdb.org/t/p/w300/${movie.poster_path}`} loading="lazy" />
           <Typography variant="h2">{movie.title}</Typography>
-          <ImageList sx={{ width: '100%', height: 450 }} cols={3} rowHeight={164}>
+          {/* <ImageList sx={{ width: '100%', height: 450 }} cols={3} rowHeight={164}>
             {movie?.images?.backdrops.map((item) => (
               <ImageListItem key={item.img}>
                 <img src={`https://image.tmdb.org/t/p/w200/${item.file_path}`} loading="lazy" />
               </ImageListItem>
             ))}
-          </ImageList>
+          </ImageList> */}
           <Typography variant="h2body1">{movie.overview}</Typography>
         </Box>
       }

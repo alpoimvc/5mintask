@@ -10,6 +10,12 @@ export const searchMovie = async (id, includeMedia = false) => {
   return response.json();
 }
 
+export const getMovieGenres = async () => {
+  console.log("searching movie genres: ");
+  const response = await fetch(`https://api.themoviedb.org/3/genre/movie/list?api_key=${import.meta.env.VITE_MOVIEDB_API_KEY}&language=en-US`)
+  return response.json();
+}
+
 export const getPopularMovies = async () => {
   console.log("getting popular movies");
   const response = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${import.meta.env.VITE_MOVIEDB_API_KEY}&language=en-US&page=1`)
