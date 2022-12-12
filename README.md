@@ -8,6 +8,7 @@ Possible improvements (not implemented due to lack of time):
  - Organize styles (either leveraging MUI's theme, or using classes)
  - Better responsiveness
  - More loading indicators
+ - Error handling
 
 How to run locally:
 
