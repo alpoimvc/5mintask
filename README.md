@@ -10,5 +10,6 @@ Possible improvements (not implemented due to lack of time):
  - More loading indicators
 
 How to run locally:
+
 Clone repo
 Run `npm install` and `npm run dev`
