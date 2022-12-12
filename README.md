@@ -8,3 +8,5 @@ Possible improvements (not implemented due to lack of time):
  - Organize styles better (either leveraging the MUI's theme, or using classes)
  - Better responsiveness
  - More loading indicators
+
+Run `npm install` and `npm run dev`
