@@ -1,10 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Autocomplete, TextField, useTheme } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { searchMovie } from '../api/moviesApi';
+import { Autocomplete, TextField } from '@mui/material';
 import { useContext } from 'react';
 import { AppContext } from '../App';
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchMovie({ movies, title }) {
   const navigate = useNavigate();
@@ -16,7 +13,7 @@ export default function SearchMovie({ movies, title }) {
       id="free-solo-2-demo"
       disableClearable
       options={movies && searchQuery?.length > 2 ? movies.map((option) => option.title) : []}
-      sx={{ width: '30vw', margin: '1em auto' }}
+      sx={{ width: { xs: '50vw', md: '30vw', lg: '30vw' }, margin: '2em auto' }}
       renderOption={(props, option) =>
         <li {...props} key={props.id}>
           {option}

@@ -1,11 +1,11 @@
-import { Box, CircularProgress, Typography, useTheme } from '@mui/material';
-import { useQueries, useQuery } from '@tanstack/react-query';
-import { useState, cloneElement, createContext, useEffect } from 'react'
-import { getMovieCredits, getGenres, getPopularMovies, searchTitle } from './api/moviesApi';
-import { useParams } from "react-router-dom";
-import MovieList from './components/MovieList';
-import SearchMovie from './components/SearchMovie';
-import { useGetMovies } from './hooks/useGetMovies';
+import { Box, CircularProgress, useTheme } from '@mui/material'
+import { useState, createContext, useEffect, Fragment } from 'react'
+import { useParams } from "react-router-dom"
+import MovieList from './components/MovieList'
+import SearchMovie from './components/SearchMovie'
+import { useGetMovies } from './hooks/useGetMovies'
+import { useInView } from 'react-intersection-observer'
+import { getGenres } from './api/moviesApi'
 
 export const AppContext = createContext({
   search: '',
@@ -17,6 +17,17 @@ function App() {
   const [genres, setGenres] = useState({});
   let { title } = useParams();
   const theme = useTheme();
+  const { ref, inView } = useInView();
+  const { data, isLoading, fetchNextPage, isFetchingNextPage, hasNextPage } = useGetMovies(searchQuery, title);
+
+  useEffect(() => {
+    let fetching = false;
+    if (inView && !fetching) {
+      fetching = true;
+      if (hasNextPage) fetchNextPage();
+      fetching = false;
+    }
+  }, [inView])
 
   useEffect(() => {
     if (title?.length > 0) {
@@ -34,23 +45,33 @@ function App() {
       .then(() => setGenres({ ...genresEnum }));
   }, [])
 
-  const { data, isLoading, isFetching, isSuccess } = useGetMovies(searchQuery, title);
-  const movies = isSuccess ? data.results : [];
-
-  console.log("App: ", data);
-
   return (
     <AppContext.Provider value={{ searchQuery, genres }}>
       <Box sx={{ textAlign: 'center', height: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', backgroundColor: theme.palette.background }}>
-        <SearchMovie movies={movies} title={title} />
-        {isLoading || isFetching ?
-          <CircularProgress sx={{ margin: 'auto' }} />
-          :
-          movies.length > 0 ? <MovieList movies={movies} /> : <Typography variant="h3" sx={{ mt: '2em' }}>No Movies Found</Typography>
+        <SearchMovie movies={data?.pages[0]?.results} title={title} />
+        {isLoading
+          ? <CircularProgress sx={{ margin: 'auto' }} />
+          : <>
+            {data?.pages?.map((page) => (
+              <Fragment key={page.page}>
+                <MovieList movies={page.results} key={page.page} />
+              </Fragment>
+            ))}
+            <div>
+              <button
+                ref={ref}
+                onClick={() => fetchNextPage()}
+                disabled={!hasNextPage || isFetchingNextPage}
+              >
+                {isFetchingNextPage
+                  ? <CircularProgress sx={{ margin: 'auto' }} />
+                  : hasNextPage
+                    ? 'Load Newer'
+                    : 'Nothing more to load'}
+              </button>
+            </div>
+          </>
         }
-        <a href="/popular/?page=2">
-          Next Page
-        </a>
       </Box>
     </AppContext.Provider >
   )

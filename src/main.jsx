@@ -9,25 +9,25 @@ import {
 import {
   createBrowserRouter,
   RouterProvider,
-  Route,
 } from "react-router-dom";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import MovieDetails from './components/MovieDetails';
 import { createTheme, ThemeProvider } from '@mui/material';
 
 const theme = createTheme({
-  // palette: {
-  //   primary: {
-  //     main: '#0052ca',
-  //   },
-  //   secondary: {
-  //     main: '#edf2ff',
-  //   },
-  // },
   typography: {
     fontFamily: [
       'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', "Noto Sans", 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
     ].join(','),
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 900,
+      lg: 1200,
+      xl: 1536,
+    },
   },
 });
 
