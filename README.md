@@ -5,7 +5,7 @@ Build a UI that lets a user search for a movie and display the results in a list
 list item, a page showing some details about the movie should be displayed.
 
 Possible improvements (not implemented due to lack of time):
- - Organize styles better (either leveraging the MUI's theme, or using classes)
+ - Organize styles (either leveraging MUI's theme, or using classes)
  - Better responsiveness
  - More loading indicators
 
