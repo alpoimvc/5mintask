@@ -12,7 +12,6 @@ const MovieDetails = () => {
   let { movieId } = useParams();
   const navigate = useNavigate();
   const theme = useTheme();
-  const isSmall = useMediaQuery(theme.breakpoints.down('md'));
   const isMedium = useMediaQuery(theme.breakpoints.up('sm'));
   const { data: movie, isLoading, isFetching, isSuccess } = useQuery(
     {
