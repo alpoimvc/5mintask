@@ -13,6 +13,23 @@ import {
 } from "react-router-dom";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import MovieDetails from './components/MovieDetails';
+import { createTheme, ThemeProvider } from '@mui/material';
+
+const theme = createTheme({
+  // palette: {
+  //   primary: {
+  //     main: '#0052ca',
+  //   },
+  //   secondary: {
+  //     main: '#edf2ff',
+  //   },
+  // },
+  typography: {
+    fontFamily: [
+      'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', "Segoe UI", 'Roboto', "Helvetica Neue", 'Arial', "Noto Sans", 'sans-serif', "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"
+    ].join(','),
+  },
+});
 
 const queryClient = new QueryClient();
 
@@ -34,6 +51,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <QueryClientProvider client={queryClient}>
     <ReactQueryDevtools initialIsOpen={false} />
-    <RouterProvider router={router} />
+    <ThemeProvider theme={theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </QueryClientProvider>
 )

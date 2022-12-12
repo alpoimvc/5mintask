@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, TextField, useTheme } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { searchMovie } from '../api/moviesApi';
 import { useContext } from 'react';
@@ -10,14 +10,12 @@ export default function SearchMovie({ movies, title }) {
   const navigate = useNavigate();
   const { searchQuery } = useContext(AppContext);
 
-  console.log("render SearchMovie", searchQuery);
-
   return (
     <Autocomplete
       freeSolo
       id="free-solo-2-demo"
       disableClearable
-      options={movies && searchQuery?.length > 2 ? movies?.results.map((option) => option.title) : []}
+      options={movies && searchQuery?.length > 2 ? movies.map((option) => option.title) : []}
       sx={{ width: '30vw', margin: '1em auto' }}
       renderOption={(props, option) =>
         <li {...props} key={props.id}>
@@ -26,18 +24,19 @@ export default function SearchMovie({ movies, title }) {
       }
       value={title || searchQuery}
       onInputChange={(e, newValue) => {
-        if (e?.target?.value === '') navigate("/")
+        if (newValue === '') navigate("/")
       }}
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search input"
+          label="Search movie"
           InputProps={{
             ...params.InputProps,
             type: 'search',
           }}
           onKeyUp={e => {
-            navigate("/search/" + e.target.value)
+            if (e.target.value === '') navigate("/")
+            else navigate("/search/" + e.target.value)
           }}
         />
       )}
