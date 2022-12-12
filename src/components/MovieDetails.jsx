@@ -29,7 +29,7 @@ const MovieDetails = () => {
   return (
     <>
       {isMedium ? <KeyboardBackspaceIcon sx={{ fontSize: 60, top: '0.25em', left: '0.25em', position: 'absolute', cursor: 'pointer' }} onClick={() => navigate(-1)} /> : null}
-      <Box sx={{ maxWidth: '100%', padding: { xs: '2em 1em', sm: '2em 1em', md: '6em 2em' } }} >
+      <Box sx={{ maxWidth: '100%', padding: { xs: '2em 1em', sm: '2em 1em', md: '6em 2em' }, display: 'flex', alignItems: 'center', justifyContent: 'center' }} >
         {isLoading || isFetching ?
           <CircularProgress sx={{ margin: 'auto' }} />
           : <Box sx={{ maxWidth: '100%', display: 'flex', flexDirection: { xs: 'column', sm: 'column', md: 'row' }, margin: { xs: '1em', sm: '1em', md: '2em', lg: '2em 6em', xl: '2em 8em' } }}>
